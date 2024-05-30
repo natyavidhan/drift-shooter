@@ -1,5 +1,7 @@
 import pygame, math
 
+WINDOW_DIMENSION = (1600, 900)
+
 class Car:
     def __init__(self, name, color:tuple) -> None:
         self.name = name
@@ -27,9 +29,11 @@ class Car:
             self.angle = - math.pi / 4
         else:
             self.angle = 0
+        
+        return False
 class Game:
     def __init__(self):
-        self.screen = pygame.display.set_mode((1600, 900))
+        self.screen = pygame.display.set_mode(WINDOW_DIMENSION)
         self.running = True
         self.clock = pygame.time.Clock()
         self.w = self.screen.get_width()
@@ -45,7 +49,7 @@ class Game:
     def run(self):
         while self.running:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                     self.running = False
 
             pygame.display.set_caption(f"FPS: {self.clock.get_fps()}")
