@@ -18,3 +18,6 @@ class Vec:
     
     def sep(self):
         return self.x, self.y
+    
+    def add(a, b):
+        return Vec(a.x + b.x, a.y + b.y)

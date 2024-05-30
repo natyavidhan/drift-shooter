@@ -42,6 +42,7 @@ class Game:
             x, y = self.player.get_center_pos()
             self.screen.blit(self.map, (self.dim.w//2 - x, self.dim.h//2 - y))
 
+            self.player.tick()
             self.draw_player()
             self.player.event()
 
