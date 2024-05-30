@@ -1,20 +1,18 @@
+import pygame
+
+from vec import Vec
+
 class Car:
-    def __init__(self, name, color:tuple) -> None:
+    def __init__(self, name, color: tuple) -> None:
         self.name = name
         self.color = color
-        self.position = {
-            "x": 100,
-            "y": 800
-        }
-        self.size = {
-            "w": 50,
-            "h": 100
-        }
+        self.position = Vec(100, 800)
+        self.size = Vec(50, 100)
         self.angle = 0
     
     def get_center_pos(self):
-        x, y = self.position["x"], self.position["y"]
-        w, h = self.size["w"], self.size["h"]
+        x, y = self.position.sep()
+        w, h = self.size.sep()
         return x - w/2, y - h/2
 
     def event(self):

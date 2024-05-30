@@ -1,10 +1,12 @@
 import pygame
 
 from car import Car
+from vec import Vec
 from consts import WINDOW_DIMENSION
 
 class Game:
     def __init__(self):
+        self.dim = Vec(WINDOW_DIMENSION)
         self.screen = pygame.display.set_mode(WINDOW_DIMENSION)
         self.running = True
         self.clock = pygame.time.Clock()
@@ -17,12 +19,12 @@ class Game:
             self.screen,
             self.player.color,
             (
-                WINDOW_DIMENSION[0]//2 - self.player.size.w//2 ,
-                WINDOW_DIMENSION[1]//2 - self.player.size.h//2,
+                self.dim.w//2 - self.player.size.w//2 ,
+                self.dim.h//2 - self.player.size.h//2,
                 self.player.size.w,
                 self.player.size.h
             ),
-            border_radius=1
+            border_radius=10
         )
 
     def run(self):
@@ -38,7 +40,7 @@ class Game:
             self.map.fill((255, 255, 255))
 
             x, y = self.player.get_center_pos()
-            self.screen.blit(self.map, (self.w//2 - x, self.h//2 - y))
+            self.screen.blit(self.map, (self.dim.w//2 - x, self.dim.h//2 - y))
 
             self.draw_player()
             self.player.event()
