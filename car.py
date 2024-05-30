@@ -1,17 +1,17 @@
-import pygame
+import pygame, math
 
 from vec import Vec
 
-class Car:
+class Car(Vec):
     def __init__(self, name, color: tuple) -> None:
         self.name = name
         self.color = color
-        self.position = Vec(100, 800)
+        super().__init__(100, 800)
         self.size = Vec(50, 100)
         self.angle = 0
     
     def get_center_pos(self):
-        x, y = self.position.sep()
+        x, y = self.sep()
         w, h = self.size.sep()
         return x - w/2, y - h/2
 

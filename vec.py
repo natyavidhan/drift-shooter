@@ -1,8 +1,12 @@
 class Vec:
-    def __init__(self, x, y=None):
-        if y == None:
-            y = x[1]
-            x = x[0]
+    def __init__(self, *args):
+        if len(args)==1:
+            x = args[0][0]
+            y = args[0][1]
+        else:
+            x = args[0]
+            y = args[1]
+
         self.x = x
         self.y = y
 
