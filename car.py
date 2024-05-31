@@ -1,8 +1,9 @@
 import pygame
 from math import sin, cos
+import socket
 
 from objects import Image
-from util import Angle, Color, Vec
+from util import Angle, Vec
 from consts import ACCELERATION, FRICTION, TERMINAL_VELOCITY, TURNING_ANGLE, WINDOW_DIMENSION
 
 def sgn(x):
@@ -13,84 +14,30 @@ def sgn(x):
     else:
         return 0
 
-class ServerCar:
-    def __init__(self, id: int, name: str) -> None:
-        self.name = name
-        self.id = id
-        self.center = Vec(0, 0)
-        self.vel = Vec(0, 0)
-        self.acc = Vec(0, 0)
-        self.accelerating = False
-        self.rotation = Angle(degree=0)
-
-    def assign_acc(self, amplitude):
-        self.acc.x = amplitude * sin(-self.rotation.radian)
-        self.acc.y = amplitude * cos(-self.rotation.radian)
-
-    def tick(self):
-        # friction
-        if not self.accelerating:
-            self.acc.x = -sgn(self.vel.x)*min(FRICTION * 0.65, abs(self.vel.x))
-            self.acc.y = -sgn(self.vel.y)*min(FRICTION * 0.65, abs(self.vel.y))
-
-        self.vel = Vec.add(self.vel, self.acc)
-        self.id = id
-
-        velocity = self.vel.mod()
-        if velocity > TERMINAL_VELOCITY:
-            self.vel.y = self.vel.y * TERMINAL_VELOCITY / velocity
-            self.vel.x = self.vel.x * TERMINAL_VELOCITY / velocity
-        
-        self.position = Vec.add(self.position, self.vel)
-        self.accelerating = False
-    
-    def event_w(self):
-        self.accelerating = True
-        self.assign_acc(-ACCELERATION + FRICTION)
-    
-    def event_s(self):
-        self.accelerating = True
-        self.assign_acc(ACCELERATION - FRICTION)
-    
-    def event_a(self):
-        vel = self.vel.mod()
-        if vel == 0:
-            return
-        self.rotation.offset(radian=-TURNING_ANGLE * vel)
-    
-    def event_d(self):
-        vel = self.vel.mod()
-        if vel == 0:
-            return
-        self.rotation.offset(radian=TURNING_ANGLE * vel)
-    
-    def update_client(self):
-        pass
-        # send position
-        # send color
-
 class Car(Image):
-    def __init__(self, id: int, name: str) -> None:
+    def __init__(self, ID: int, name: str, client:socket.socket) -> None:
         self.name = name
-        self.id = id
+        self.ID = ID
+        self.client = client
         super().__init__(Vec(0, 0), Vec(25, 50), "assets\Cars\car_black_1.png")
     
+    def send(self, command:str):
+        self.client.send(str.encode(command))
+        return self.client.recv(2048).decode()
+
     def event(self):
         keys = pygame.key.get_pressed()
+        comm = "keypress:"
         if keys[pygame.K_w]:
-            self.event_w()
-            pass
-            # socket event_w
+            comm+="w"
         if keys[pygame.K_s]:
-            self.event_s()
-            pass
-            # socket event_s
-
+            comm+=",s"
         if keys[pygame.K_a]:
-            self.event_a()
-            pass
-            # socket event_a
-        elif keys[pygame.K_d]:
-            self.event_d()
-            pass
-            # socket event_d
+            comm+=",a"
+        if keys[pygame.K_d]:
+            comm+=",d"
+        pos = self.send(comm)
+        values = [float(i.split(":")[1]) for i in pos.split("|")]
+        self.position.x = values[0]
+        self.position.y = values[1]
+        self.rotation = Angle(values[2])

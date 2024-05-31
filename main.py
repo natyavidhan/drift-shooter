@@ -1,4 +1,5 @@
 import pygame
+import socket, sys
 
 from window import Window, Scene
 from objects import Rectangle
@@ -11,8 +12,16 @@ scene = Scene("Main", Color.from_hex("#202020"))
 window.add_scene(scene)
 window.set_active_scene("Main")
 
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+name = sys.argv[1]
+
+client.connect(("localhost", 5050))
+client.send(str.encode(name))
+ID = client.recv(2048).decode()
+
 level = Rectangle(Vec(0, 0), Vec(1000, 1000), Color.from_hex("#505050"))
-car = Car("Player1", Color.from_hex("#ff0000"))
+car = Car(name, ID, client)
 
 scene.add_objs([level, car])
 
@@ -26,8 +35,6 @@ frame = 0
 def main():
     global frame
     car.event()
-    if frame % 2 == 0:
-        car.tick()
     window.camera = car.position
     frame += 1
     return True
