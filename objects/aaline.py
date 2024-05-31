@@ -5,14 +5,22 @@ from util import Color, DisplayMode, Vec
 
 class AALine(Line):
     """ Pygame AALine """
-    def __init__(self, position1: Vec, position2: Vec, color: Color, thickness: int = 1):
+    def __init__(
+            self,
+            position1: Vec,
+            position2: Vec,
+            color: Color,
+            thickness: int = 1
+        ):
         super().__init__(position1, position2, color, thickness)
 
-    def display(self, screen: Surface, _: DisplayMode):
+    def display(self, screen: Surface, _: DisplayMode, camera_offset: Vec):
+        pos1 = self.position1.offset_new(camera_offset)
+        pos2 = self.position2.offset_new(camera_offset)
         draw.aaline(
             screen,
             self.color.toRGB(),
-            (self.position1.x, self.position1.y),
-            (self.position2.x, self.position2.y),
+            pos1.sep(),
+            pos2.sep(),
             self.thickness
         )

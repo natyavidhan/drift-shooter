@@ -19,7 +19,7 @@ class Car(Rectangle):
         self.vel = Vec(0, 0)
         self.acc = Vec(0, 0)
         self.accelerating = False
-        super().__init__(Vec(WINDOW_DIMENSION.w//2, WINDOW_DIMENSION.h//2), Vec(5, 10), color)
+        super().__init__(Vec(0, 0), Vec(5, 10), color)
     
     def assign_acc(self, amplitude):
         self.acc.x = amplitude * sin(-self.rotation.radian)

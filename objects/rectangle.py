@@ -1,7 +1,7 @@
 from math import atan, sqrt, cos, sin
 from pygame import Surface
 
-from objects import Polygon, Circle
+from objects import Polygon
 from util import Color, Angle, DisplayMode, Vec
 
 
@@ -16,9 +16,9 @@ class Rectangle(Polygon):
     """ Dimensions of the rectangle """
     rotation: Angle
     """ Rotation of the rectangle """
-
     positions: list[Vec]
     """ Position of each point """
+
     diagonal_angle: Angle
     diagonal_length: float
 
@@ -45,7 +45,10 @@ class Rectangle(Polygon):
         self.diagonal_angle = Angle(
             radian=atan(self.dimension.h / self.dimension.w)
         )
-        self.diagonal_length = sqrt(_sqr(self.dimension.h) + _sqr(self.dimension.w))
+        self.diagonal_length = sqrt(
+            _sqr(self.dimension.h) +
+            _sqr(self.dimension.w)
+        )
 
         def vertex_calculator(angle: Angle):
             return Vec(
@@ -63,13 +66,22 @@ class Rectangle(Polygon):
         self.vertex3 = self.center.offset_new(*vertex_calculator(angle3).sep())
         self.vertex4 = self.center.offset_new(*vertex_calculator(angle4).sep())
 
-        self.positions = [self.vertex1, self.vertex2, self.vertex3, self.vertex4]
-
-    def display(self, screen: Surface, display_mode: DisplayMode):
+    def display(
+            self,
+            screen: Surface,
+            display_mode: DisplayMode,
+            camera_offset: Vec
+        ):
         if display_mode == DisplayMode.CORNER:
             self.vertex1.offset(self.dimension.w/2, self.dimension.h/2)
             self.vertex2.offset(self.dimension.w/2, self.dimension.h/2)
             self.vertex3.offset(self.dimension.w/2, self.dimension.h/2)
             self.vertex4.offset(self.dimension.w/2, self.dimension.h/2)
 
-        super().display(screen, display_mode)
+        self.positions = [
+            self.vertex1,
+            self.vertex2,
+            self.vertex3,
+            self.vertex4
+        ]
+        super().display(screen, display_mode, camera_offset)

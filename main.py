@@ -1,6 +1,5 @@
 import pygame
 
-from objects import Rectangle
 from window import Window, Scene
 from util import Color, DisplayMode, Vec
 from car import Car
@@ -22,6 +21,7 @@ window.add_event_handler(pygame.KEYDOWN, escape_close)
 def main():
     car.event()
     car.tick()
+    window.camera = Vec(300, 200)
     return True
 
 

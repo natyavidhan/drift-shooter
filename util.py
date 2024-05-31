@@ -91,6 +91,14 @@ class Vec:
     
     def sep(self):
         return self.x, self.y
+
+    def neg(self):
+        self.x = -self.x
+        self.y = -self.y
+        return self
+    
+    def neg_new(self):
+        return Vec(-self.x, -self.y)
     
     def add(a, b):
         return Vec(a.x + b.x, a.y + b.y)

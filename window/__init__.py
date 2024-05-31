@@ -1,9 +1,12 @@
 import pygame
-from typing import Union
+from typing import Union, Callable
 from objects import AALine, Arc, Circle, Ellipse, Line, Polygon, Rectangle, Text, Image, Triangle, Square
 from util import Vec, DisplayMode
 
-Objects: Union = Union[AALine, Arc, Circle, Ellipse, Line, Polygon, Rectangle, Text, Image, Triangle, Square]
+Objects = Union[
+    AALine, Arc, Circle, Ellipse, Line, Polygon,
+    Rectangle, Text, Image, Triangle, Square
+]
 
 from .scene import Scene
 from .handler import Handler
@@ -14,21 +17,27 @@ class Window:
     name: str
     """ Caption of the window """
     icon: pygame.Surface
+    """ Window Icon """
     dimensions: Vec
     """ Dimensions of the window """
-    screen: pygame.Surface
-    clock: pygame.time
+    camera: Vec
+    """ Camera position """
     fps: int
     """ FPS of the window """
     running: bool
+    """ Is window running """
     display_mode: DisplayMode
     """ DisplayMode of the window """
-    mouse: tuple[int, int]
+    mouse: Vec
     """ Mouse coordinates """
     events: list[pygame.event.Event]
+    """ List of events that occured in the current frame"""
     event_handlers: list[Handler]
-    keys: [pygame.key]
+    """ List of event handlers """
+    keys: pygame.key.ScancodeWrapper
     """ Keys currently pressed """
+    screen: pygame.Surface
+    clock: pygame.time
     scenes: dict[str, Scene]
     active_scene: Scene
 
@@ -44,10 +53,11 @@ class Window:
         self.display_mode = display_mode
         self.dimensions = dimensions
         self.screen = pygame.display.set_mode([dimensions.w, dimensions.h])
+        self.camera = Vec(0, 0)
         self.clock = pygame.time.Clock()
         self.fps = fps
         self.running = True
-        self.mouse = (0, 0)
+        self.mouse = Vec(0, 0)
         self.event_handlers = []
         self.keys = []
         self.scenes = {}
@@ -55,7 +65,7 @@ class Window:
         if icon:
             pygame.display.set_icon(icon)
 
-        def end():
+        def end(_):
             self.running = False
 
         self.add_event_handler(pygame.QUIT, end)
@@ -64,7 +74,7 @@ class Window:
         pygame.mixer.init(44100, 16, 2, 4096)
         pygame.init()
 
-    def display(self, main: ()):
+    def display(self, main: Callable[[], bool]):
         """ Display handler for the window """
         while self.running:
             self._pre_display()
@@ -81,7 +91,7 @@ class Window:
     def _pre_display(self):
         self.screen.fill(self.active_scene.background_color.toRGB())
         self.events = pygame.event.get()
-        self.mouse = pygame.mouse.get_pos()
+        self.mouse = Vec(pygame.mouse.get_pos())
         self.keys = pygame.key.get_pressed()
 
         for event in self.events:
@@ -94,7 +104,14 @@ class Window:
             if hasattr(obj, 'draw'):
                 obj.draw()
 
-            obj.display(self.screen, self.display_mode)
+            obj.display(
+                self.screen,
+                self.display_mode,
+                Vec.add(
+                    self.camera.neg_new(),
+                    Vec(self.dimensions.w//2, self.dimensions.h//2)
+                )
+            )
 
     def _post_display(self):
         self.clock.tick(self.fps)
@@ -106,14 +123,18 @@ class Window:
 
     def set_active_scene(self, scene_name: str) -> bool:
         new_scene = self.scenes.get(scene_name)
-        if not scene:
+        if not new_scene:
             return False
 
         self.active_scene = new_scene
         return True
 
-    def add_event_handler(self, event_type: int, function: ()):
+    def add_event_handler(
+            self, event_type: int,
+            function: Callable[[pygame.event.Event], None]
+        ):
         """ Attach an event handler for a specific event """
-        # We are not checking that if the handler is already in place to allow users to have isolated and
-        # independent handlers for the same event if ever needed
+        # We are not checking that if the handler is already in place to allow
+        # users to have isolated and independent handlers for the same event if
+        # ever needed
         self.event_handlers.append(Handler(event_type, function))

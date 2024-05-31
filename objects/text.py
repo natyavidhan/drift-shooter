@@ -29,10 +29,10 @@ class Text:
         self.color = color
         self.font = font_name
 
-    def display(self, screen: Surface, _: DisplayMode):
+    def display(self, screen: Surface, _: DisplayMode, camera_offset: Vec):
         font_render = font.Font(self.font, self.size)
         text = font_render.render(self.string, True, self.color.toRGB())
         rect = text.get_rect()
-        rect.center = self.position.sep()
+        rect.center = self.position.offset(camera_offset.sep()).sep()
 
         screen.blit(text, rect)

@@ -16,13 +16,20 @@ class Image:
         self.dimension = dimension
         self.image = img
 
-    def display(self, screen: Surface, display_mode: DisplayMode):
+    def display(
+            self,
+            screen: Surface,
+            display_mode: DisplayMode,
+            camera_offset: Vec
+        ):
         data = image.load(self.image).convert()
         img = transform.scale(data, (self.dimension.w, self.dimension.h))
         screen.blit(
             img,
-            self.position.offset(
-                -self.dimension.w/2 if display_mode == DisplayMode.CENTER else 0,
-                -self.dimension.h/2 if display_mode == DisplayMode.CENTER else 0
+            self.position.offset_new(camera_offset).offset(
+                -self.dimension.w/2
+                    if display_mode == DisplayMode.CENTER else 0,
+                -self.dimension.h/2
+                    if display_mode == DisplayMode.CENTER else 0
             ).sep()
         )

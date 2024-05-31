@@ -16,11 +16,10 @@ class Polygon:
         self.color = color
         self.thickness = thickness
 
-    def display(self, screen: Surface, _: DisplayMode):
+    def display(self, screen: Surface, _: DisplayMode, camera_offset: Vec):
         vertexes = []
         for position in self.positions:
-            vertexes.append(position.sep())
-
+            vertexes.append(position.offset_new(*camera_offset.sep()).sep())
         draw.polygon(
             screen,
             self.color.toRGB(),
