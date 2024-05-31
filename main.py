@@ -22,10 +22,14 @@ def escape_close(event):
 
 window.add_event_handler(pygame.KEYDOWN, escape_close)
 
+frame = 0
 def main():
+    global frame
     car.event()
-    car.tick()
+    if frame % 2 == 0:
+        car.tick()
     window.camera = car.center
+    frame += 1
     return True
 
 

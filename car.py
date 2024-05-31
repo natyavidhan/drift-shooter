@@ -37,6 +37,9 @@ class Car(Rectangle):
         if velocity > TERMINAL_VELOCITY:
             self.vel.y = self.vel.y * TERMINAL_VELOCITY / velocity
             self.vel.x = self.vel.x * TERMINAL_VELOCITY / velocity
+            self.color = Color.from_hex("#0000ff")
+        else:
+            self.color = Color.from_hex("#ff0000")
         
         self.center = Vec.add(self.center, self.vel)
         self.accelerating = False
@@ -50,7 +53,11 @@ class Car(Rectangle):
             self.accelerating = True
             self.assign_acc(ACCELERATION - FRICTION)
 
+        vel = self.vel.mod()
+        if vel == 0:
+            return
+
         if keys[pygame.K_a]:
-            self.rotation.offset(radian=-TURNING_ANGLE)
+            self.rotation.offset(radian=-TURNING_ANGLE * vel)
         elif keys[pygame.K_d]:
-            self.rotation.offset(radian=TURNING_ANGLE)
+            self.rotation.offset(radian=TURNING_ANGLE * vel)
