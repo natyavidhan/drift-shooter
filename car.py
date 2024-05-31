@@ -38,9 +38,6 @@ class Car(Rectangle):
             self.vel.y = self.vel.y * TERMINAL_VELOCITY / velocity
             self.vel.x = self.vel.x * TERMINAL_VELOCITY / velocity
         
-        direction = None if self.vel.x == 0 else self.vel.y/self.vel.x
-        print(direction)
-
         self.center = Vec.add(self.center, self.vel)
         self.accelerating = False
 
