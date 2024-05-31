@@ -32,8 +32,10 @@ class Rectangle(Polygon):
             position: Vec,
             dimension: Vec,
             color: Color,
-            rotation: Angle = Angle(degree=0)
+            rotation: Angle = None
     ):
+        if rotation is None:
+            rotation = Angle(degree=0)
         self.center = position
         self.dimension = dimension
         self.rotation = rotation

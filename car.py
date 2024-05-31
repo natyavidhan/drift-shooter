@@ -48,7 +48,7 @@ class Car(Rectangle):
             self.accelerating = True
             self.assign_acc(ACCELERATION - FRICTION)
 
-        if keys[pygame.K_a]:
-            self.rotation.offset(-TURNING_ANGLE)
-        elif keys[pygame.K_d]:
-            self.rotation.offset(TURNING_ANGLE)
+        # if keys[pygame.K_a]:
+        self.rotation.offset(-TURNING_ANGLE)
+        # elif keys[pygame.K_d]:
+        #     self.rotation.offset(TURNING_ANGLE)

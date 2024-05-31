@@ -130,7 +130,16 @@ class Side:
     angle: Angle
     """ Rotation of the side """
 
-    def __init__(self, position: Vec = Vec(0, 0), angle: Angle = Angle(degree=0), length: float = 0):
+    def __init__(
+            self,
+            position: Vec = None,
+            angle: Angle = None,
+            length: float = 0
+        ):
+        if position is None:
+            position = Vec(0, 0)
+        if angle is None:
+            angle = Angle(degree=0)
         self.position = position
         self.angle = angle
         self.length = length
