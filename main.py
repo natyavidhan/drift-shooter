@@ -28,7 +28,7 @@ def main():
     car.event()
     if frame % 2 == 0:
         car.tick()
-    window.camera = car.center
+    window.camera = car.position
     frame += 1
     return True
 
