@@ -6,7 +6,7 @@ from util import Color, DisplayMode, Vec
 from car import Car
 from consts import WINDOW_DIMENSION
 
-window = Window("Window", DisplayMode.CENTER, Vec(1600, 800), 420)
+window = Window("Window", DisplayMode.CENTER, WINDOW_DIMENSION, 420)
 scene = Scene("Main", Color.from_hex("#202020"))
 window.add_scene(scene)
 window.set_active_scene("Main")
