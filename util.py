@@ -42,22 +42,26 @@ class Angle:
     radian: float
     """ Angle in radian unit """
 
-    def __init__(self, **kwargs):
-        deg = kwargs.get("degree")
-        rad = kwargs.get("radian")
-        if deg is not None:  # <<<<<
-            self.degree = deg
-            self.radian = radians(deg)
-        elif rad is not None:  # <<<<<
-            self.radian = rad
-            self.degree = degrees(rad)
+    def __init__(self, degree: float = None, radian: float = None):
+        if degree is not None:  # <<<<<
+            self.degree = degree
+            self.radian = radians(degree)
+        elif radian is not None:  # <<<<<
+            self.radian = radian
+            self.degree = degrees(radian)
         else:
             raise ValueError("Please specify either \"degree\" or \"radian\"")
 
-    def offset(self, degree: float):
+    def offset(self, degree: float = None, radian: float = None):
         """ Offsets the value of angle """
-        self.degree += degree
-        self.radian = radians(self.degree)
+        if degree is not None:  # <<<<<
+            self.degree += degree
+            self.radian = radians(self.degree)
+        elif radian is not None:  # <<<<<
+            self.radian += radian
+            self.degree = degrees(self.radian)
+        else:
+            raise ValueError("Please specify either \"degree\" or \"radian\"")
         return self
 
     def offset_new(self, degree: float):

@@ -11,7 +11,7 @@ scene = Scene("Main", Color.from_hex("#202020"))
 window.add_scene(scene)
 window.set_active_scene("Main")
 
-level = Rectangle(Vec(0, 0), Vec(100, 100), Color.from_hex("#505050"))
+level = Rectangle(Vec(0, 0), Vec(1000, 1000), Color.from_hex("#505050"))
 car = Car("Player1", Color.from_hex("#ff0000"))
 
 scene.add_objs([level, car])
@@ -23,7 +23,6 @@ def escape_close(event):
 window.add_event_handler(pygame.KEYDOWN, escape_close)
 
 def main():
-    print(level.rotation.degree)
     car.event()
     car.tick()
     window.camera = car.center

@@ -35,7 +35,7 @@ class Car(Rectangle):
 
         self.vel.x = sgn(self.vel.x)*min(TERMINAL_VELOCITY, abs(self.vel.x))
         self.vel.y = sgn(self.vel.y)*min(TERMINAL_VELOCITY, abs(self.vel.y))
-
+        print(self.center.sep(), self.vel.sep(), self.acc.sep())
         self.center = Vec.add(self.center, self.vel)
         self.accelerating = False
 
@@ -48,7 +48,7 @@ class Car(Rectangle):
             self.accelerating = True
             self.assign_acc(ACCELERATION - FRICTION)
 
-        # if keys[pygame.K_a]:
-        self.rotation.offset(-TURNING_ANGLE)
-        # elif keys[pygame.K_d]:
-        #     self.rotation.offset(TURNING_ANGLE)
+        if keys[pygame.K_a]:
+            self.rotation.offset(radian=-TURNING_ANGLE)
+        elif keys[pygame.K_d]:
+            self.rotation.offset(radian=TURNING_ANGLE)
