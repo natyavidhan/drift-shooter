@@ -1,7 +1,8 @@
-from math import radians, degrees
-from dataclasses import dataclass
+from math import radians, degrees, sqrt
 from enum import Enum
 
+def sqr(x: float) -> float:
+    return x*x
 
 class Color:
     """ Color class """
@@ -103,6 +104,9 @@ class Vec:
     
     def neg_new(self):
         return Vec(-self.x, -self.y)
+
+    def mod(self):
+        return sqrt(sqr(self.x) + sqr(self.y))
     
     def add(a, b):
         return Vec(a.x + b.x, a.y + b.y)

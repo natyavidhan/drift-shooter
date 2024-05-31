@@ -2,10 +2,8 @@ from math import atan, sqrt, cos, sin
 from pygame import Surface
 
 from objects import Polygon
-from util import Color, Angle, DisplayMode, Vec
+from util import Color, Angle, DisplayMode, Vec, sqr
 
-
-def _sqr(x): return x * x
 
 
 class Rectangle(Polygon):
@@ -48,8 +46,8 @@ class Rectangle(Polygon):
             radian=atan(self.dimension.h / self.dimension.w)
         )
         self.diagonal_length = sqrt(
-            _sqr(self.dimension.h) +
-            _sqr(self.dimension.w)
+            sqr(self.dimension.h) +
+            sqr(self.dimension.w)
         )
 
         def vertex_calculator(angle: Angle):

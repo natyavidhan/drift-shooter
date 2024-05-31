@@ -19,7 +19,7 @@ class Car(Rectangle):
         self.vel = Vec(0, 0)
         self.acc = Vec(0, 0)
         self.accelerating = False
-        super().__init__(Vec(0, 0), Vec(5, 10), color)
+        super().__init__(Vec(0, 0), Vec(25, 50), color)
     
     def assign_acc(self, amplitude):
         self.acc.x = amplitude * sin(-self.rotation.radian)
@@ -33,9 +33,14 @@ class Car(Rectangle):
 
         self.vel = Vec.add(self.vel, self.acc)
 
-        self.vel.x = sgn(self.vel.x)*min(TERMINAL_VELOCITY, abs(self.vel.x))
-        self.vel.y = sgn(self.vel.y)*min(TERMINAL_VELOCITY, abs(self.vel.y))
-        print(self.center.sep(), self.vel.sep(), self.acc.sep())
+        velocity = self.vel.mod()
+        if velocity > TERMINAL_VELOCITY:
+            self.vel.y = self.vel.y * TERMINAL_VELOCITY / velocity
+            self.vel.x = self.vel.x * TERMINAL_VELOCITY / velocity
+        
+        direction = None if self.vel.x == 0 else self.vel.y/self.vel.x
+        print(direction)
+
         self.center = Vec.add(self.center, self.vel)
         self.accelerating = False
 
