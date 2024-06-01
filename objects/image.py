@@ -8,7 +8,7 @@ class Image:
     """ Position of the image """
     dimension: Vec
     """ Dimensions of the image """
-    image: str
+    img: str | Surface
     """ Image file location """
     rotation: Angle
     """ Rotation of image """
@@ -19,9 +19,12 @@ class Image:
             rotation = Angle(degree=0)
         self.position = position
         self.dimension = dimension
-        self.image = img
+        # self.image = img
         self.rotation = rotation
-        image_data = image.load(self.image).convert()
+        if type(img) == str:
+            image_data = image.load(img).convert()
+        else:
+            image_data = img
         image_data.set_colorkey((0, 0, 0))
         self.img = transform.scale(image_data, (self.dimension.w, self.dimension.h))
 

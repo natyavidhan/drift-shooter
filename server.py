@@ -49,6 +49,8 @@ class Player:
             data = self.conn.recv(2048)
             reply = data.decode()
             if not data:
+                players.pop(self.ID)
+                print(self.name + " left")
                 break
             event, value = reply.split(":")
             if event == "keypress":
@@ -66,9 +68,18 @@ class Player:
                     vel = self.vel.mod()
                     self.rotation.offset(radian=TURNING_ANGLE * vel)
                 self.send(f"x:{self.position.x}|y:{self.position.y}|angle:{self.rotation.degree}")
+                # continue
             if event == "get":
                 if value == "self":
                     self.send(f"x:{self.position.x}|y:{self.position.y}|angle:{self.rotation.degree}")
+                if value == "all":
+                    ret_str = "players||"
+                    for ID, player in players.items():
+                        if ID != self.ID:
+                            ret_str += f"id:{ID}|name:{player.name}|x:{player.position.x}|y:{player.position.y}|angle:{player.rotation.degree}||"
+                    ret_str = ret_str[:-2]
+                    self.send(ret_str)
+                    continue
             
             if not self.accelerating:
                 self.acc.x = -sgn(self.vel.x)*min(FRICTION * 0.65, abs(self.vel.x))
