@@ -1,14 +1,14 @@
-import socket
+import socket, random
+from sys import argv
 from threading import Thread
-import random
 from math import sin, cos
 
 from util import Angle, Vec
-from consts import ACCELERATION, FRICTION, TERMINAL_VELOCITY, TURNING_ANGLE, WINDOW_DIMENSION, PORT
+from consts import ACCELERATION, FRICTION, TERMINAL_VELOCITY, TURNING_ANGLE
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(("localhost", PORT))
+sock.bind((argv[1], int(argv[2])))
 sock.listen(5)
 
 players = {}
@@ -74,8 +74,9 @@ class Player:
                 if value == "all":
                     ret_str = "players||"
                     for ID, player in players.items():
-                        if ID != self.ID:
-                            ret_str += f"id:{ID}|name:{player.name}|x:{player.position.x}|y:{player.position.y}|angle:{player.rotation.degree}||"
+                        if ID == self.ID:
+                            continue
+                        ret_str += f"id:{ID}|name:{player.name}|x:{player.position.x}|y:{player.position.y}|angle:{player.rotation.degree}||"
                     ret_str = ret_str[:-2]
                     self.send(ret_str)
                 continue

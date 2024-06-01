@@ -7,7 +7,6 @@ FRICTION = 0.05
 ACCELERATION = 0.07
 TERMINAL_VELOCITY = 3
 TURNING_ANGLE = tau/(720 * TERMINAL_VELOCITY)
-PORT = 5050
 
 SELF_CAR = "assets\Cars\car_black_1.png"
 OTHER_CAR = "assets\Cars\car_red_1.png"

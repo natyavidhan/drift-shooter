@@ -1,11 +1,11 @@
-import pygame
-import socket, sys
+import pygame, socket
+from sys import argv
 
 from window import Window, Scene
 from objects import Rectangle
 from util import Color, DisplayMode, Vec, Angle
 from car import PlayableCar, NonPlayableCar
-from consts import WINDOW_DIMENSION, PORT, MAP_SIZE, MAP_COLOR
+from consts import WINDOW_DIMENSION, MAP_SIZE, MAP_COLOR
 
 window = Window("Window", DisplayMode.CENTER, WINDOW_DIMENSION, 420)
 scene = Scene("Main", Color.from_hex("#202020"))
@@ -14,9 +14,14 @@ window.set_active_scene("Main")
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-name = sys.argv[1]
+try: name = argv[1]
+except: raise Exception("""Please specify a name
+example: py main.py username ip_address port""")
 
-client.connect(("localhost", PORT))
+try: client.connect((argv[2], int(argv[3])))
+except: raise Exception("""Please specify a ip_address and port
+example: py main.py username ip_address port""")
+
 client.send(str.encode(name))
 ID = client.recv(2048).decode()
 
