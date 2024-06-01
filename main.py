@@ -2,8 +2,8 @@ import pygame
 import socket, sys
 
 from window import Window, Scene
-from objects import Rectangle, Angle
-from util import Color, DisplayMode, Vec
+from objects import Rectangle
+from util import Color, DisplayMode, Vec, Angle
 from car import PlayableCar, NonPlayableCar
 from consts import WINDOW_DIMENSION, PORT, MAP_SIZE, MAP_COLOR
 
@@ -40,11 +40,11 @@ def main():
     client.send(str.encode("get:all"))
     cars = client.recv(2048).decode()
     car_objects = []
-    for i, car in enumerate(cars.split("||")[1:]):
+    for car in cars.split("||")[1:]:
         v = [j.split(":")[1] for j in car.split("|")]
         car_objects.append(NonPlayableCar(
-            i, # Id right now
-            str(i), # Name right now
+            v[0],
+            v[1],
             Vec(float(v[2]), float(v[3])),
             Angle(degree=float(v[4]))
         ))

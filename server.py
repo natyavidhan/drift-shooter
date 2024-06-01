@@ -4,11 +4,11 @@ import random
 from math import sin, cos
 
 from util import Angle, Vec
-from consts import ACCELERATION, FRICTION, TERMINAL_VELOCITY, TURNING_ANGLE, WINDOW_DIMENSION
+from consts import ACCELERATION, FRICTION, TERMINAL_VELOCITY, TURNING_ANGLE, WINDOW_DIMENSION, PORT
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.bind(("localhost", 5050))
+sock.bind(("localhost", PORT))
 sock.listen(5)
 
 players = {}
@@ -54,21 +54,20 @@ class Player:
                 break
             event, value = reply.split(":")
             if event == "keypress":
-                keys = value.split(",")
-                if "w" in keys:
+                if "w" in value:
                     self.accelerating = True
                     self.assign_acc(-ACCELERATION + FRICTION)
-                if "a" in keys:
+                if "a" in value:
                     vel = self.vel.mod()
                     self.rotation.offset(radian=-TURNING_ANGLE * vel)
-                if "s" in keys:
+                if "s" in value:
                     self.accelerating = True
                     self.assign_acc(ACCELERATION - FRICTION)
-                if "d" in keys:
+                if "d" in value:
                     vel = self.vel.mod()
                     self.rotation.offset(radian=TURNING_ANGLE * vel)
                 self.send(f"x:{self.position.x}|y:{self.position.y}|angle:{self.rotation.degree}")
-                # continue
+
             if event == "get":
                 if value == "self":
                     self.send(f"x:{self.position.x}|y:{self.position.y}|angle:{self.rotation.degree}")
@@ -79,7 +78,7 @@ class Player:
                             ret_str += f"id:{ID}|name:{player.name}|x:{player.position.x}|y:{player.position.y}|angle:{player.rotation.degree}||"
                     ret_str = ret_str[:-2]
                     self.send(ret_str)
-                    continue
+                continue
             
             if not self.accelerating:
                 self.acc.x = -sgn(self.vel.x)*min(FRICTION * 0.65, abs(self.vel.x))

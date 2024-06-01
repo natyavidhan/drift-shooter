@@ -1,7 +1,7 @@
 from math import tau
 from util import Vec, Color
 
-WINDOW_DIMENSION = Vec(1600, 900)
+WINDOW_DIMENSION = Vec(860, 450)
 
 FRICTION = 0.05
 ACCELERATION = 0.07
