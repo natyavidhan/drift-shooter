@@ -14,19 +14,24 @@ class Image:
     """ Rotation of image """
     data: Surface
 
-    def __init__(self, position: Vec, dimension: Vec, img: str, rotation: Angle = None):
+    def __init__(
+            self,
+            position: Vec,
+            dimension: Vec,
+            img: str,
+            rotation: Angle = None
+        ):
         if rotation is None:
             rotation = Angle(degree=0)
         self.position = position
         self.dimension = dimension
-        # self.image = img
         self.rotation = rotation
         if type(img) == str:
             image_data = image.load(img).convert()
         else:
             image_data = img
         image_data.set_colorkey((0, 0, 0))
-        self.img = transform.scale(image_data, (self.dimension.w, self.dimension.h))
+        self.img = transform.scale(image_data, self.dimension.sep())
 
     def display(
             self,

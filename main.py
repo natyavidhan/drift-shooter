@@ -2,10 +2,10 @@ import pygame
 import socket, sys
 
 from window import Window, Scene
-from objects import Rectangle, Image
+from objects import Rectangle, Angle
 from util import Color, DisplayMode, Vec
-from car import Car
-from consts import WINDOW_DIMENSION
+from car import PlayableCar, NonPlayableCar
+from consts import WINDOW_DIMENSION, PORT, MAP_SIZE, MAP_COLOR
 
 window = Window("Window", DisplayMode.CENTER, WINDOW_DIMENSION, 420)
 scene = Scene("Main", Color.from_hex("#202020"))
@@ -16,14 +16,14 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 name = sys.argv[1]
 
-client.connect(("localhost", 5050))
+client.connect(("localhost", PORT))
 client.send(str.encode(name))
 ID = client.recv(2048).decode()
 
-level = Rectangle(Vec(0, 0), Vec(1000, 1000), Color.from_hex("#505050"))
-car = Car(name, ID, client)
+level = Rectangle(Vec(0, 0), MAP_SIZE, MAP_COLOR)
+player = PlayableCar(name, ID, client)
 
-scene.add_objs([level, car])
+scene.add_objs([level, player])
 
 def escape_close(event):
     if event.key == pygame.K_ESCAPE:
@@ -32,19 +32,23 @@ def escape_close(event):
 window.add_event_handler(pygame.KEYDOWN, escape_close)
 
 frame = 0
-car_img = pygame.image.load("assets\Cars\car_red_1.png").convert()
 
 def main():
-    car.event()
-    window.camera = car.position
+    player.event()
+    window.camera = player.position
     
     client.send(str.encode("get:all"))
     cars = client.recv(2048).decode()
-    print(cars)
-    for car_ in cars.split("||")[1:]:
-        v = [i.split(":")[1] for i in car_.split("|")]
-        # print(v)
-        Image(Vec(float(v[2]), float(v[3])), Vec(25, 50), car_img, float(v[4]))
+    car_objects = []
+    for i, car in enumerate(cars.split("||")[1:]):
+        v = [j.split(":")[1] for j in car.split("|")]
+        car_objects.append(NonPlayableCar(
+            i, # Id right now
+            str(i), # Name right now
+            Vec(float(v[2]), float(v[3])),
+            Angle(degree=float(v[4]))
+        ))
+    scene.objs[2:] = car_objects
     return True
 
 
