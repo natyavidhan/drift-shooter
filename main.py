@@ -18,9 +18,12 @@ try: name = argv[1]
 except: raise Exception("""Please specify a name
 example: py main.py username ip_address port""")
 
-try: client.connect((argv[2], int(argv[3])))
+try: address, port = argv[2], int(argv[3])
 except: raise Exception("""Please specify a ip_address and port
 example: py main.py username ip_address port""")
+
+try: client.connect((address, port))
+except: raise Exception("Failed to reach the server")
 
 client.send(str.encode(name))
 ID = client.recv(2048).decode()
@@ -42,7 +45,8 @@ def main():
     player.event()
     window.camera = player.position
     
-    client.send(str.encode("get:all"))
+    try: client.send(str.encode("get:all"))
+    except: raise Exception("Failed to send a message to the server")
     cars = client.recv(2048).decode()
     car_objects = []
     for car in cars.split("||")[1:]:

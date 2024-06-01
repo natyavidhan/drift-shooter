@@ -41,8 +41,10 @@ class PlayableCar(Image):
             comm+="a"
         if keys[pygame.K_d]:
             comm+="d"
-        pos = self.send(comm)
-        print(pos)
+
+        try: pos = self.send(comm)
+        except: raise Exception("Failed to send a message to the server")
+
         values = [float(i.split(":")[1]) for i in pos.split("|")]
         self.position= Vec(values[:2])
         self.rotation = Angle(values[2])
